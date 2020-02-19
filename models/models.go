@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/XcXerxes/go-blog-server/setting"
+	"github.com/XcXerxes/go-blog-server/pkg/setting"
 	"github.com/jinzhu/gorm"
 )
 

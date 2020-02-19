@@ -3,33 +3,27 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-19 18:31:14
+ * @LastEditTime: 2020-02-19 19:20:48
  */
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/XcXerxes/go-blog-server/setting"
-	"github.com/gin-gonic/gin"
+	"github.com/XcXerxes/go-blog-server/pkg/setting"
+	"github.com/XcXerxes/go-blog-server/routers"
 )
 
-func steupRouter() *gin.Engine {
-	r := gin.Default()
-	r.GET("/test", func(c *gin.Context) {
-		c.String(200, "hello world!")
-	})
-	return r
-}
-
 func main() {
-	r := steupRouter()
+	r := routers.InitRouter()
 	s := &http.Server{
-		Addr:           setting.HTTPPort,
-		Handler:        r,
-		ReadTimeout:    setting.ReadTimeout,
-		WriteTimeout:   setting.WriteTimeout,
-		MaxHeaderBytes: 1 << 20,
+		Addr:           fmt.Sprintf(":%d", setting.HTTPPort), // 监听的TCP地址
+		Handler:        r,                                    // http 句柄 实质为 ServeHTTP
+		ReadTimeout:    setting.ReadTimeout,                  //允许读取的最大时间
+		WriteTimeout:   setting.WriteTimeout,                 // 允许写入的最大时间
+		MaxHeaderBytes: 1 << 20,                              // 请求投的最大字节数
 	}
-	s.ListenAndServe()
+	log.Fatal(s.ListenAndServe())
 }

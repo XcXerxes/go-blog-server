@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-19 16:54:11
+ * @LastEditTime: 2020-02-19 19:18:41
  */
 package setting
 
@@ -16,7 +16,7 @@ import (
 
 var (
 	Cfg     *ini.File
-	RumMode string
+	RunMode string
 
 	HTTPPort     int
 	ReadTimeout  time.Duration
@@ -37,14 +37,14 @@ func init() {
 	LoadApp()
 }
 
-// 加载基础
+// LoadBase 加载基础
 func LoadBase() {
 	// 读取配置文件中 RUN_MODE 属性 如果没有值，默认使用 debug 默认分区可以使用空字符串表示
 	// MustString 转换为 string
-	RumMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
+	RunMode = Cfg.Section("").Key("RUN_MODE").MustString("debug")
 }
 
-// 加载服务配置
+// LoadServer 加载服务配置
 func LoadServer() {
 	// 读取配置文件中 server分区
 	sec, err := Cfg.GetSection("server")
@@ -53,11 +53,12 @@ func LoadServer() {
 	}
 	// 通过key 找到当前分区中的值
 	// MustInt 转换为 int
+	HTTPPort = sec.Key("HTTP_PORT").MustInt(8000)
 	ReadTimeout = time.Duration(sec.Key("READ_TIMEOUT").MustInt(60)) * time.Second
 	WriteTimeout = time.Duration(sec.Key("WRITE_TIMEOUT").MustInt(60)) * time.Second
 }
 
-// 加载app
+// LoadApp 加载app
 func LoadApp() {
 	sec, err := Cfg.GetSection("app")
 	if err != nil {

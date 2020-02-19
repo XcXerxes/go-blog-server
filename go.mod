@@ -22,12 +22,12 @@ require (
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
 
-// replace (
-// 	github.com/XcXerxes/go-blog-server/conf => /Users/zhangjie/xinbo/myself/go/go-blog-server/conf
-// 	github.com/XcXerxes/go-blog-server/middleware => /Users/zhangjie/xinbo/myself/go/go-blog-server/middleware
-// 	github.com/XcXerxes/go-blog-server/models => /Users/zhangjie/xinbo/myself/go/go-blog-server/models
-// 	github.com/XcXerxes/go-blog-server/pkg/e => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/e
-// 	github.com/XcXerxes/go-blog-server/pkg/setting => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/setting
-// 	github.com/XcXerxes/go-blog-server/pkg/util => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/util
-// 	github.com/XcXerxes/go-blog-server/routers => /Users/zhangjie/xinbo/myself/go/go-blog-server/routers
-// )
+replace (
+	github.com/XcXerxes/go-blog-server/conf => /Users/zhangjie/xinbo/myself/go/go-blog-server/conf
+	github.com/XcXerxes/go-blog-server/middleware => /Users/zhangjie/xinbo/myself/go/go-blog-server/middleware
+	github.com/XcXerxes/go-blog-server/models => /Users/zhangjie/xinbo/myself/go/go-blog-server/models
+	github.com/XcXerxes/go-blog-server/pkg/e => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/e
+	github.com/XcXerxes/go-blog-server/pkg/setting => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/setting
+	github.com/XcXerxes/go-blog-server/pkg/util => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/util
+	github.com/XcXerxes/go-blog-server/routers => /Users/zhangjie/xinbo/myself/go/go-blog-server/routers
+)
