@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 17:04:46
  * @LastEditors: leo
- * @LastEditTime: 2020-02-19 17:31:43
+ * @LastEditTime: 2020-02-20 13:30:20
  */
 
 package models
@@ -14,11 +14,12 @@ import (
 
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 var db *gorm.DB
 
-// 结构体
+// Model 结构体
 type Model struct {
 	ID         int `gorm:"primary_key" json:"id"`
 	CreatedOn  int `json:created_on`
@@ -53,6 +54,7 @@ func init() {
 	db.DB().SetMaxOpenConns(100)
 }
 
+// CloseDB 关闭db
 func CloseDB() {
 	defer db.Close()
 }

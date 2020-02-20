@@ -1,0 +1,12 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server Petstore server.",
+        "title": "博客接口文档说明",
+        "contact": {},
+        "license": {},
+        "version": "1.0.0"
+    },
+    "basePath": "/api/v1/",
+    "paths": {}
+}
