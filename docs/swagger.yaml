@@ -1,9 +1,91 @@
 basePath: /api/v1/
+definitions:
+  models.Tag:
+    properties:
+      created_by:
+        description: 创建人
+        type: string
+      createdOn:
+        description: 创建时间
+        type: integer
+      id:
+        description: id标识
+        type: integer
+      modified_by:
+        description: 修改人
+        type: string
+      modifiedOn:
+        description: 修改时间
+        type: integer
+      name:
+        description: 标签名称
+        type: string
+      state:
+        description: 启用或禁用
+        type: integer
+    type: object
 info:
   contact: {}
-  description: This is a sample server Petstore server.
+  description: 博客系统的api接口文档
   license: {}
   title: 博客接口文档说明
   version: 1.0.0
-paths: {}
+paths:
+  /articles/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取文章列表
+      parameters:
+      - description: 页数
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 标题
+        in: query
+        name: title
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 获取文章列表
+  /tags:
+    get:
+      consumes:
+      - application/json
+      description: 获取文章标签列表 带字段筛选 带分页
+      parameters:
+      - description: 当前页数
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 标签名称
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 获取文章标签列表
+    post:
+      consumes:
+      - application/json
+      description: 新增文章标签
+      parameters:
+      - description: 新增文章标签
+        in: body
+        name: created_by
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tag'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 新增文章标签
 swagger: "2.0"

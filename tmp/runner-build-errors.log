@@ -1,0 +1,2 @@
+# github.com/XcXerxes/go-blog-server/routers/api/v1
+routers/api/v1/article.go:33:8: type validation.Validation is not an expression

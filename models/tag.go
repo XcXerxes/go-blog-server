@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-20 10:57:29
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 13:55:33
+ * @LastEditTime: 2020-02-20 18:29:55
  */
 package models
 
@@ -16,15 +16,16 @@ import (
 type Tag struct {
 	Model
 
-	Name       string `json:"name"`
-	CreatedBy  string `json:"created_by"`
-	ModifiedBy string `json:"modified_by"`
-	State      int    `json:"state"`
+	Name       string `json:"name"`        // 标签名称
+	CreatedBy  string `json:"created_by"`  // 创建人
+	ModifiedBy string `json:"modified_by"` // 修改人
+	State      int    `json:"state"`       // 启用或禁用
 }
 
 // BeforeCreate  gorm callback
 func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
 	scope.SetColumn("CreatedOn", time.Now().Unix())
+	scope.SetColumn("ModifiedOn", time.Now().Unix())
 	return nil
 }
 

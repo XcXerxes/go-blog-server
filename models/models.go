@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 17:04:46
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 13:30:20
+ * @LastEditTime: 2020-02-20 14:40:51
  */
 
 package models
@@ -21,9 +21,9 @@ var db *gorm.DB
 
 // Model 结构体
 type Model struct {
-	ID         int `gorm:"primary_key" json:"id"`
-	CreatedOn  int `json:created_on`
-	ModifiedOn int `json:modified_on`
+	ID         int `gorm:"primary_key" json:"id"` // id标识
+	CreatedOn  int `json:created_on`              // 创建时间
+	ModifiedOn int `json:modified_on`             // 修改时间
 }
 
 func init() {

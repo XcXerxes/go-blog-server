@@ -3,13 +3,13 @@
  * @Author: leo
  * @Date: 2020-02-19 19:35:07
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 13:56:55
+ * @LastEditTime: 2020-02-20 19:08:55
  */
 
 package v1
 
 import (
-	"net/http"
+	"fmt"
 
 	"github.com/XcXerxes/go-blog-server/models"
 	"github.com/XcXerxes/go-blog-server/pkg/e"
@@ -21,6 +21,14 @@ import (
 )
 
 // GetTags 获取多个文章标签 带字段筛选
+// @Summary 获取文章标签列表
+// @Description 获取文章标签列表 带字段筛选 带分页
+// @Accept json
+// @produce json
+// @param page query int true "当前页数"
+// @param name query string false "标签名称"
+// @Success 200
+// @Router /tags [get]
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
@@ -41,52 +49,75 @@ func GetTags(c *gin.Context) {
 	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": data,
-	})
-
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"code": code,
+	// 	"msg":  e.GetMsg(code),
+	// 	"data": data,
+	// })
+	models.SendResponse(c, code, nil, data)
+	return
 }
 
 // AddTag 新增文章标签
+// @Summary 新增文章标签
+// @Description 新增文章标签
+// @Accept json
+// @produce json
+// @param state name created_by body models.Tag true "新增文章标签"
+// @Success 200
+// @Router /tags [post]
 func AddTag(c *gin.Context) {
-	name := c.Query("name")
-	// 如果不存在 state 就默认赋值为0 同时转为 int
-	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
-	createdBy := c.Query("created_by")
+	var tag models.Tag
+	if err := c.ShouldBind(&tag); err != nil {
+		return
+	}
+	name := tag.Name
+	state := com.StrTo(tag.State).MustInt()
+	createdBy := tag.CreatedBy
+	// name := c.PostForm("name")
+	// // 如果不存在 state 就默认赋值为0 同时转为 int
+	// state := com.StrTo(c.DefaultPostForm("state", "0")).MustInt()
 
+	fmt.Println(name, state, createdBy)
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("名称不能为空")
 	valid.MaxSize(name, 100, "name").Message("名称最长为100字符")
 	valid.Required(createdBy, "created_by").Message("创建人不能为空")
 	valid.MaxSize(createdBy, 100, "created_by").Message("创建人最长为100字符")
 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
-
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
-		code = e.SUCCESS
-		models.AddTag(name, state, createdBy)
+		if !models.ExistTagByName(name) {
+			code = e.SUCCESS
+			models.AddTag(name, state, createdBy)
+		}
 	} else {
 		code = e.ERROR_EXIST_TAG
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"code": code,
+	// 	"msg":  e.GetMsg(code),
+	// 	"data": make(map[string]string),
+	// })
+	models.SendResponse(c, code, nil, make(map[string]string))
 }
 
 // EditTag 修改文章标签
 func EditTag(c *gin.Context) {
+	var tag models.Tag
 	id := com.StrTo(c.Param("id")).MustInt()
-	name := c.Query("name")
-	// 如果不存在 state 就默认赋值为0 同时转为 int
-	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
-	modifiedBy := c.Query("modified_by")
+	if err := c.ShouldBind(&tag); err != nil {
+		return
+	}
+	name := tag.Name
+	modifiedBy := tag.ModifiedBy
+	var state int = -1
+	// if arg := tag.State; arg != "" {
+	// 	state = com.StrTo(tag.State).MustInt()
+	// 	valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
+	// }
 
 	valid := validation.Validation{}
-
 	valid.Required(id, "id").Message("ID不能为空")
 	valid.Required(modifiedBy, "modified_by").Message("修改人不能为空")
 	valid.Required(name, "name").Message("name不能为空")
@@ -108,11 +139,7 @@ func EditTag(c *gin.Context) {
 			code = e.ERROR_EXIST_TAG
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	models.SendResponse(c, code, nil, make(map[string]string))
 }
 
 // DeleteTag 删除文章标签
@@ -132,9 +159,5 @@ func DeleteTag(c *gin.Context) {
 			code = e.ERROR_NOT_EXIST_TAG
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-		"msg":  e.GetMsg(code),
-		"data": make(map[string]string),
-	})
+	models.SendResponse(c, code, nil, make(map[string]string))
 }

@@ -3,13 +3,13 @@
  * @Author: leo
  * @Date: 2020-02-19 15:34:09
  * @LastEditors: leo
- * @LastEditTime: 2020-02-19 18:56:09
+ * @LastEditTime: 2020-02-20 18:43:01
  */
 
 package e
 
 var MsgFlags = map[int]string{
-	SUCCESS:                        "ok",
+	SUCCESS:                        "成功",
 	ERROR:                          "fail",
 	INVALID_PARAMS:                 "请求参数错误",
 	ERROR_EXIST_TAG:                "标签名称已存在",
