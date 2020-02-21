@@ -1,5 +1,47 @@
-basePath: /api/v1/
+basePath: /api/v1
 definitions:
+  admin.AuthBody:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Article:
+    properties:
+      content:
+        description: 文章内容
+        type: string
+      created_by:
+        description: 创建人
+        type: string
+      createdOn:
+        description: 创建时间
+        type: integer
+      desc:
+        description: 描述
+        type: string
+      id:
+        description: id标识
+        type: integer
+      modified_by:
+        description: 修改人
+        type: string
+      modifiedOn:
+        description: 修改时间
+        type: integer
+      state:
+        description: 禁用 or 启用
+        type: integer
+      tag:
+        $ref: '#/definitions/models.Tag'
+        type: object
+      tag_id:
+        type: integer
+      title:
+        description: 标题
+        type: string
+    type: object
   models.Tag:
     properties:
       created_by:
@@ -31,7 +73,7 @@ info:
   title: 博客接口文档说明
   version: 1.0.0
 paths:
-  /articles/{id}:
+  /articles:
     get:
       consumes:
       - application/json
@@ -45,13 +87,97 @@ paths:
       - description: 标题
         in: query
         name: title
-        required: true
         type: string
       produces:
       - application/json
       responses:
         "200": {}
       summary: 获取文章列表
+    post:
+      consumes:
+      - application/json
+      description: 新增文章
+      parameters:
+      - description: 新增文章
+        in: body
+        name: state
+        required: true
+        schema:
+          $ref: '#/definitions/models.Article'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 新增文章
+  /articles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除文章
+      parameters:
+      - description: 唯一id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 删除文章
+    get:
+      consumes:
+      - application/json
+      description: 获取单个文章
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 获取单个文章
+    put:
+      consumes:
+      - application/json
+      description: 修改文章
+      parameters:
+      - description: 唯一id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 新增文章
+        in: body
+        name: state
+        required: true
+        schema:
+          $ref: '#/definitions/models.Article'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 修改文章
+  /signin:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      parameters:
+      - description: 登录参数
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/admin.AuthBody'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 登录
   /tags:
     get:
       consumes:

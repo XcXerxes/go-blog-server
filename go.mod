@@ -8,6 +8,7 @@ require (
 	github.com/astaxie/beego v1.12.1
 	github.com/codegangsta/envy v0.0.0-20141216192214-4b78388c8ce4 // indirect
 	github.com/codegangsta/gin v0.0.0-20171026143024-cafe2ce98974 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-ini/ini v1.52.0
 	github.com/go-openapi/spec v0.19.6 // indirect
@@ -44,4 +45,5 @@ replace (
 	github.com/XcXerxes/go-blog-server/pkg/setting => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/setting
 	github.com/XcXerxes/go-blog-server/pkg/util => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/util
 	github.com/XcXerxes/go-blog-server/routers => /Users/zhangjie/xinbo/myself/go/go-blog-server/routers
+	github.com/XcXerxes/go-blog-server/runtime => /Users/zhangjie/xinbo/myself/go/go-blog-server/runtime
 )

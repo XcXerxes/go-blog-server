@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 12:47:28
+ * @LastEditTime: 2020-02-21 19:01:59
  */
 package main
 
@@ -22,7 +22,7 @@ import (
 // @title 博客接口文档说明
 // @version 1.0.0
 // @description  博客系统的api接口文档
-// @BasePath /api/v1/
+// @BasePath /api/v1
 func main() {
 	r := routers.InitRouter()
 

@@ -7,9 +7,9 @@
         "license": {},
         "version": "1.0.0"
     },
-    "basePath": "/api/v1/",
+    "basePath": "/api/v1",
     "paths": {
-        "/articles/{id}": {
+        "/articles": {
             "get": {
                 "description": "获取文章列表",
                 "consumes": [
@@ -31,8 +31,134 @@
                         "type": "string",
                         "description": "标题",
                         "name": "title",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            },
+            "post": {
+                "description": "新增文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "新增文章",
+                "parameters": [
+                    {
+                        "description": "新增文章",
+                        "name": "state",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Article"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/articles/{id}": {
+            "get": {
+                "description": "获取单个文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "获取单个文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
                         "in": "query",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            },
+            "put": {
+                "description": "修改文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "唯一id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "新增文章",
+                        "name": "state",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Article"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            },
+            "delete": {
+                "description": "删除文章",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除文章",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "唯一id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/signin": {
+            "post": {
+                "description": "登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "登录",
+                "parameters": [
+                    {
+                        "description": "登录参数",
+                        "name": "username",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.AuthBody"
+                        }
                     }
                 ],
                 "responses": {
@@ -96,6 +222,65 @@
         }
     },
     "definitions": {
+        "admin.AuthBody": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Article": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "文章内容",
+                    "type": "string"
+                },
+                "createdOn": {
+                    "description": "创建时间",
+                    "type": "integer"
+                },
+                "created_by": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "desc": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id标识",
+                    "type": "integer"
+                },
+                "modifiedOn": {
+                    "description": "修改时间",
+                    "type": "integer"
+                },
+                "modified_by": {
+                    "description": "修改人",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "禁用 or 启用",
+                    "type": "integer"
+                },
+                "tag": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Tag"
+                },
+                "tag_id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                }
+            }
+        },
         "models.Tag": {
             "type": "object",
             "properties": {

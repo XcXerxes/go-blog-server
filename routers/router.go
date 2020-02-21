@@ -3,13 +3,15 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 19:00:58
+ * @LastEditTime: 2020-02-21 19:02:17
  */
 
 package routers
 
 import (
+	"github.com/XcXerxes/go-blog-server/middleware/jwt"
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
+	admin "github.com/XcXerxes/go-blog-server/routers/api/admin"
 	v1 "github.com/XcXerxes/go-blog-server/routers/api/v1"
 	"github.com/gin-gonic/gin"
 )
@@ -38,8 +40,10 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
+	r.POST("/api/v1/signin", admin.PostAuth)
 	// 注册路由
 	apiv1 := r.Group("/api/v1")
+	apiv1.Use(jwt.JWT())
 	{
 		// 标签路由
 		apiv1.GET("/tags", v1.GetTags)
