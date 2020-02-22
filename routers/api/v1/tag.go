@@ -10,6 +10,7 @@ package v1
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/XcXerxes/go-blog-server/models"
 	"github.com/XcXerxes/go-blog-server/pkg/e"
@@ -46,7 +47,7 @@ func GetTags(c *gin.Context) {
 	}
 
 	code := e.SUCCESS
-	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
+	data["lists"] = models.GetTags(util.GetPage(c), setting.AppSetting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
 
 	// c.JSON(http.StatusOK, gin.H{
@@ -68,11 +69,12 @@ func GetTags(c *gin.Context) {
 // @Router /tags [post]
 func AddTag(c *gin.Context) {
 	var tag models.Tag
+	fmt.Println("==============")
 	if err := c.ShouldBind(&tag); err != nil {
-		return
+		fmt.Println("err========", err)
 	}
 	name := tag.Name
-	state := com.StrTo(tag.State).MustInt()
+	state := tag.State
 	createdBy := tag.CreatedBy
 	// name := c.PostForm("name")
 	// // 如果不存在 state 就默认赋值为0 同时转为 int
@@ -92,7 +94,9 @@ func AddTag(c *gin.Context) {
 			models.AddTag(name, state, createdBy)
 		}
 	} else {
-		code = e.ERROR_EXIST_TAG
+		for _, err := range valid.Errors {
+			log.Printf("err.key:%s, err.message: %s", err.Key, err.Message)
+		}
 	}
 	// c.JSON(http.StatusOK, gin.H{
 	// 	"code": code,
@@ -137,6 +141,10 @@ func EditTag(c *gin.Context) {
 			models.EditTag(id, data)
 		} else {
 			code = e.ERROR_EXIST_TAG
+		}
+	} else {
+		for _, err := range valid.Errors {
+			log.Printf("err.key:%s, err.message: %s", err.Key, err.Message)
 		}
 	}
 	models.SendResponse(c, code, nil, make(map[string]string))

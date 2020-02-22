@@ -11,6 +11,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
 	"github.com/jinzhu/gorm"
@@ -26,21 +27,21 @@ type Model struct {
 	ModifiedOn int `json:modified_on`             // 修改时间
 }
 
-func init() {
+func Setup() {
 	var (
 		err                                               error
 		dbType, dbName, user, password, host, tablePrefix string
 	)
-	sec, err := setting.Cfg.GetSection("database")
-	if err != nil {
-		log.Fatal(2, "Fail to get section 'database': %v", err)
-	}
-	dbType = sec.Key("TYPE").String()
-	dbName = sec.Key("NAME").String()
-	user = sec.Key("USER").String()
-	password = sec.Key("PASSWORD").String()
-	host = sec.Key("HOST").String()
-	tablePrefix = sec.Key("TABLE_PREFIX").String()
+	// sec, err := setting.Cfg.GetSection("database")
+	// if err != nil {
+	// 	log.Fatal(2, "Fail to get section 'database': %v", err)
+	// }
+	dbType = setting.DatabaseSetting.Type
+	dbName = setting.DatabaseSetting.Name
+	user = setting.DatabaseSetting.User
+	password = setting.DatabaseSetting.Password
+	host = setting.DatabaseSetting.Host
+	tablePrefix = setting.DatabaseSetting.TablePrefix
 
 	if db, err = gorm.Open(dbType, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, dbName)); err != nil {
 		log.Println(err)
@@ -52,9 +53,41 @@ func init() {
 	db.LogMode(true)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+	db.Callback().Create().Replace("gorm:update_time_stamp", updateTimeStampForCreateCallback)
+	db.Callback().Update().Replace("gorm:update_time_stamp", updateTimeStampForUpdateCallback)
 }
 
 // CloseDB 关闭db
 func CloseDB() {
 	defer db.Close()
+}
+
+// updateTimeStampForCreateCallback 更新创建时间的 回调
+func updateTimeStampForCreateCallback(scope *gorm.Scope) {
+	// 检测db 是否有错误
+	if !scope.HasError() {
+		// 获取当前的时间戳
+		nowTime := time.Now().Unix()
+		// 获取得到创建时间字段
+		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
+			if createTimeField.IsBlank {
+				createTimeField.Set(nowTime)
+			}
+		}
+		// 获取所有的字段
+		fields := scope.Fields()
+		fmt.Printf("fileds==========", fields)
+		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
+			if modifyTimeField.IsBlank {
+				modifyTimeField.Set(nowTime)
+			}
+		}
+	}
+}
+
+// updateTimeStampForUpdateCallback
+func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
+	if _, ok := scope.Get("gorm:update_column"); !ok {
+		scope.SetColumn("ModifiedOn", time.Now().Unix())
+	}
 }

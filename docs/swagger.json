@@ -54,7 +54,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Article"
+                            "$ref": "#/definitions/v1.ArticleBody"
                         }
                     }
                 ],
@@ -109,7 +109,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Article"
+                            "$ref": "#/definitions/v1.ArticleBody"
                         }
                     }
                 ],
@@ -233,54 +233,6 @@
                 }
             }
         },
-        "models.Article": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "description": "文章内容",
-                    "type": "string"
-                },
-                "createdOn": {
-                    "description": "创建时间",
-                    "type": "integer"
-                },
-                "created_by": {
-                    "description": "创建人",
-                    "type": "string"
-                },
-                "desc": {
-                    "description": "描述",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "id标识",
-                    "type": "integer"
-                },
-                "modifiedOn": {
-                    "description": "修改时间",
-                    "type": "integer"
-                },
-                "modified_by": {
-                    "description": "修改人",
-                    "type": "string"
-                },
-                "state": {
-                    "description": "禁用 or 启用",
-                    "type": "integer"
-                },
-                "tag": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.Tag"
-                },
-                "tag_id": {
-                    "type": "integer"
-                },
-                "title": {
-                    "description": "标题",
-                    "type": "string"
-                }
-            }
-        },
         "models.Tag": {
             "type": "object",
             "properties": {
@@ -311,6 +263,35 @@
                 "state": {
                     "description": "启用或禁用",
                     "type": "integer"
+                }
+            }
+        },
+        "v1.ArticleBody": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "内容",
+                    "type": "string"
+                },
+                "created_by": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "desc": {
+                    "description": "描述信息",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "禁用或启用",
+                    "type": "integer"
+                },
+                "tag_id": {
+                    "description": "标签id",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
                 }
             }
         }

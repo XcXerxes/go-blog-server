@@ -8,8 +8,11 @@
 package logging
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 type Level int
@@ -33,9 +36,14 @@ const (
 	FATAL
 )
 
-func init() {
+func Setup() {
+	var err error
 	filePath := getLogFileFullPath()
-	F = openLogFile(filePath)
+	fileName := getLogFileName()
+	F, err = openLogFile(fileName, filePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
 }
 

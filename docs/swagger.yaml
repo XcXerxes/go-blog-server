@@ -7,41 +7,6 @@ definitions:
       username:
         type: string
     type: object
-  models.Article:
-    properties:
-      content:
-        description: 文章内容
-        type: string
-      created_by:
-        description: 创建人
-        type: string
-      createdOn:
-        description: 创建时间
-        type: integer
-      desc:
-        description: 描述
-        type: string
-      id:
-        description: id标识
-        type: integer
-      modified_by:
-        description: 修改人
-        type: string
-      modifiedOn:
-        description: 修改时间
-        type: integer
-      state:
-        description: 禁用 or 启用
-        type: integer
-      tag:
-        $ref: '#/definitions/models.Tag'
-        type: object
-      tag_id:
-        type: integer
-      title:
-        description: 标题
-        type: string
-    type: object
   models.Tag:
     properties:
       created_by:
@@ -65,6 +30,27 @@ definitions:
       state:
         description: 启用或禁用
         type: integer
+    type: object
+  v1.ArticleBody:
+    properties:
+      content:
+        description: 内容
+        type: string
+      created_by:
+        description: 创建人
+        type: string
+      desc:
+        description: 描述信息
+        type: string
+      state:
+        description: 禁用或启用
+        type: integer
+      tag_id:
+        description: 标签id
+        type: string
+      title:
+        description: 标题
+        type: string
     type: object
 info:
   contact: {}
@@ -103,7 +89,7 @@ paths:
         name: state
         required: true
         schema:
-          $ref: '#/definitions/models.Article'
+          $ref: '#/definitions/v1.ArticleBody'
       produces:
       - application/json
       responses:
@@ -155,7 +141,7 @@ paths:
         name: state
         required: true
         schema:
-          $ref: '#/definitions/models.Article'
+          $ref: '#/definitions/v1.ArticleBody'
       produces:
       - application/json
       responses:

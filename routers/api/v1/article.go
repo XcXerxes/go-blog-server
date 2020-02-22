@@ -19,6 +19,15 @@ import (
 	"github.com/unknwon/com"
 )
 
+type ArticleBody struct {
+	Title     string `json:"title"`      // 标题
+	TagID     string `json:"tag_id"`     // 标签id
+	State     int    `json:"state"`      // 禁用或启用
+	Desc      string `json:"desc"`       // 描述信息
+	Content   string `json:"content"`    // 内容
+	CreatedBy string `json:"created_by"` // 创建人
+}
+
 // GetArticle 获取单个文章
 // @Summary 获取单个文章
 // @Description 获取单个文章
@@ -81,7 +90,7 @@ func GetArticles(c *gin.Context) {
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		code = e.SUCCESS
-		data["lists"] = models.GetArticles(util.GetPage(c), setting.PageSize, maps)
+		data["lists"] = models.GetArticles(util.GetPage(c), setting.AppSetting.PageSize, maps)
 		data["total"] = models.GetArticleTotal(maps)
 	} else {
 		for _, err := range valid.Errors {
@@ -96,7 +105,7 @@ func GetArticles(c *gin.Context) {
 // @Description 新增文章
 // @Accept json
 // @produce json
-// @param title desc content created_by tag_id state body models.Article true "新增文章"
+// @param title desc content created_by tag_id state body ArticleBody true "新增文章"
 // @Success 200
 // @Router /articles [post]
 func AddArticle(c *gin.Context) {
@@ -147,7 +156,7 @@ func AddArticle(c *gin.Context) {
 // @Accept json
 // @produce json
 // @param id path int true "唯一id"
-// @param title desc content created_by tag_id state body models.Article true "新增文章"
+// @param title desc content created_by tag_id state body ArticleBody true "新增文章"
 // @Success 200
 // @Router /articles/{id} [put]
 func EditArticle(c *gin.Context) {
