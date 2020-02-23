@@ -3,13 +3,14 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-21 19:02:17
+ * @LastEditTime: 2020-02-23 20:44:04
  */
 
 package routers
 
 import (
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
+	"github.com/XcXerxes/go-blog-server/routers/api"
 	admin "github.com/XcXerxes/go-blog-server/routers/api/admin"
 	v1 "github.com/XcXerxes/go-blog-server/routers/api/v1"
 	"github.com/gin-gonic/gin"
@@ -40,6 +41,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.ServerSetting.RunMode)
 
 	r.POST("/api/v1/signin", admin.PostAuth)
+	r.POST("/api/v1/upload", api.UploadImage)
 	// 注册路由
 	apiv1 := r.Group("/api/v1")
 	// apiv1.Use(jwt.JWT())

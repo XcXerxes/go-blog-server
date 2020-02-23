@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-21 19:09:09
  * @LastEditors: leo
- * @LastEditTime: 2020-02-21 20:30:54
+ * @LastEditTime: 2020-02-23 13:45:52
  */
 package logging
 
@@ -38,7 +38,7 @@ const (
 
 func Setup() {
 	var err error
-	filePath := getLogFileFullPath()
+	filePath := getLogFilePath()
 	fileName := getLogFileName()
 	F, err = openLogFile(fileName, filePath)
 	if err != nil {

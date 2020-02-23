@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-21 19:01:59
+ * @LastEditTime: 2020-02-23 13:48:08
  */
 package main
 
@@ -15,7 +15,6 @@ import (
 
 	_ "github.com/XcXerxes/go-blog-server/docs"
 	"github.com/XcXerxes/go-blog-server/models"
-	"github.com/XcXerxes/go-blog-server/pkg/logging"
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
 	"github.com/XcXerxes/go-blog-server/routers"
 	swaggerFiles "github.com/swaggo/files"
@@ -25,7 +24,7 @@ import (
 func init() {
 	setting.Setup()
 	models.Setup()
-	logging.Setup()
+	// logging.Setup()
 }
 
 // @title 博客接口文档说明
