@@ -42,4 +42,5 @@ replace (
 	github.com/XcXerxes/go-blog-server/pkg/util => /Users/zhangjie/xinbo/myself/go/go-blog-server/pkg/util
 	github.com/XcXerxes/go-blog-server/routers => /Users/zhangjie/xinbo/myself/go/go-blog-server/routers
 	github.com/XcXerxes/go-blog-server/runtime => /Users/zhangjie/xinbo/myself/go/go-blog-server/runtime
+	github.com/XcXerxes/go-blog-server/service => /Users/zhangjie/xinbo/myself/go/go-blog-server/service
 )
