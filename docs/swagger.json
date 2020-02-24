@@ -54,7 +54,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.ArticleBody"
+                            "$ref": "#/definitions/v1.AddArticleForm"
                         }
                     }
                 ],
@@ -109,7 +109,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.ArticleBody"
+                            "$ref": "#/definitions/v1.EditArticleForm"
                         }
                     }
                 ],
@@ -153,16 +153,17 @@
                 "parameters": [
                     {
                         "description": "登录参数",
-                        "name": "username",
+                        "name": "string",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.AuthBody"
+                            "$ref": "#/definitions/admin.AuthForm"
                         }
                     }
                 ],
                 "responses": {
-                    "200": {}
+                    "200": {},
+                    "500": {}
                 }
             }
         },
@@ -189,6 +190,12 @@
                         "description": "标签名称",
                         "name": "name",
                         "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "标签名称",
+                        "name": "state",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -207,12 +214,68 @@
                 "parameters": [
                     {
                         "description": "新增文章标签",
-                        "name": "created_by",
+                        "name": "state",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Tag"
+                            "$ref": "#/definitions/v1.AddTagForm"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "500": {}
+                }
+            }
+        },
+        "/tags/{id}": {
+            "put": {
+                "description": "修改文章标签",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改文章标签",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "新增文章标签",
+                        "name": "state",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.EditTagForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            },
+            "delete": {
+                "description": "删除文章标签",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除文章标签",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -222,7 +285,7 @@
         }
     },
     "definitions": {
-        "admin.AuthBody": {
+        "admin.AuthForm": {
             "type": "object",
             "properties": {
                 "password": {
@@ -233,44 +296,15 @@
                 }
             }
         },
-        "models.Tag": {
-            "type": "object",
-            "properties": {
-                "createdOn": {
-                    "description": "创建时间",
-                    "type": "integer"
-                },
-                "created_by": {
-                    "description": "创建人",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "id标识",
-                    "type": "integer"
-                },
-                "modifiedOn": {
-                    "description": "修改时间",
-                    "type": "integer"
-                },
-                "modified_by": {
-                    "description": "修改人",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "标签名称",
-                    "type": "string"
-                },
-                "state": {
-                    "description": "启用或禁用",
-                    "type": "integer"
-                }
-            }
-        },
-        "v1.ArticleBody": {
+        "v1.AddArticleForm": {
             "type": "object",
             "properties": {
                 "content": {
                     "description": "内容",
+                    "type": "string"
+                },
+                "cover_image_url": {
+                    "description": "封面图片",
                     "type": "string"
                 },
                 "created_by": {
@@ -278,20 +312,95 @@
                     "type": "string"
                 },
                 "desc": {
-                    "description": "描述信息",
+                    "description": "描述",
                     "type": "string"
                 },
                 "state": {
-                    "description": "禁用或启用",
+                    "description": "启用or 禁用",
                     "type": "integer"
                 },
                 "tag_id": {
-                    "description": "标签id",
-                    "type": "string"
+                    "description": "分类id",
+                    "type": "integer"
                 },
                 "title": {
                     "description": "标题",
                     "type": "string"
+                }
+            }
+        },
+        "v1.AddTagForm": {
+            "type": "object",
+            "properties": {
+                "created_by": {
+                    "description": "创建人",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "禁用 or 启用",
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.EditArticleForm": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "内容",
+                    "type": "string"
+                },
+                "cover_image_url": {
+                    "description": "封面图片",
+                    "type": "string"
+                },
+                "desc": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "modified_by": {
+                    "description": "修改人",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "启用or 禁用",
+                    "type": "integer"
+                },
+                "tag_id": {
+                    "description": "分类id",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                }
+            }
+        },
+        "v1.EditTagForm": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "modified_by": {
+                    "description": "修改人",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "名称",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "禁用 or 启用",
+                    "type": "integer"
                 }
             }
         }

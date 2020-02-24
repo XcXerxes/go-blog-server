@@ -36,10 +36,14 @@ func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
 }
 
 // GetTags 获取所有标签列表
-func GetTags(pageNum int, pageSize int, maps interface{}) (tags []Tag) {
-	db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags)
+func GetTags(pageNum int, pageSize int, maps interface{}) ([]*Tag, error) {
+	var tags []*Tag
+	err := db.Where(maps).Offset(pageNum).Limit(pageSize).Find(&tags).Error
 	// 因为这里直接定义了返回参数， 操作直接返回
-	return
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return tags, nil
 }
 
 // GetTagTotal 获取标签的条数
@@ -49,49 +53,64 @@ func GetTagTotal(maps interface{}) (count int) {
 }
 
 // ExistTagByName 是否存在标签名
-func ExistTagByName(name string) bool {
+func ExistTagByName(name string) (bool, error) {
 	var tag Tag
 	// 指定从tag数据库表中 检索 存在 ${name} 的所有 id 字段
 	// SELECT id FROM tag WHERE name = `name`limit 1;
-	db.Select("id").Where("name = ?", name).First(&tag)
-	if tag.ID > 0 {
-		return true
+	err := db.Select("id").Where("name = ?", name).First(&tag).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
 	}
-	return false
+	if tag.ID > 0 {
+		return true, nil
+	}
+	return false, nil
 }
 
 // ExistTagById 是否存在id
-func ExistTagById(id int) bool {
+func ExistTagById(id int) (bool, error) {
 	var tag Tag
 	// 指定从tag数据库表中 检索 存在 ${name} 的所有 id 字段
 	// SELECT id FROM tag WHERE name = `name`limit 1;
-	db.Select("id").Where("id = ?", id).First(&tag)
-	if tag.ID > 0 {
-		return true
+	err := db.Select("id").Where("id = ?", id).First(&tag).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return false, err
 	}
-	return false
+	if tag.ID > 0 {
+		return true, nil
+	}
+	return false, nil
 }
 
 // AddTag 新增标签
-func AddTag(name string, state int, createdBy string) bool {
-	db.Create(&Tag{
+func AddTag(name string, state int, createdBy string) error {
+	var tag Tag
+	tag = Tag{
 		Name:      name,
 		State:     state,
 		CreatedBy: createdBy,
-	})
-	return true
+	}
+	if err := db.Create(&tag).Error; err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // DeleteTag 删除标签
-func DeleteTag(id int) bool {
-	db.Where("id = ?", id).Delete(&Tag{})
-	return true
+func DeleteTag(id int) error {
+	if err := db.Where("id = ?", id).Delete(&Tag{}).Error; err != nil {
+		return  err
+	}
+	return nil
 }
 
 // EditTag 编辑标签
-func EditTag(id int, data interface{}) bool {
-	db.Model(&Tag{}).Where("id = ?", id).Updates(data)
-	return true
+func EditTag(id int, data interface{}) error {
+	if err := db.Model(&Tag{}).Where("id = ?", id).Updates(data).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 // ClearAllTag 硬删除

@@ -3,21 +3,22 @@
  * @Author: leo
  * @Date: 2020-02-21 13:45:17
  * @LastEditors: leo
- * @LastEditTime: 2020-02-21 18:52:29
+ * @LastEditTime: 2020-02-24 20:21:02
  */
 package admin
 
 import (
-	"log"
+	"net/http"
+
+	"github.com/XcXerxes/go-blog-server/pkg/app"
 
 	"github.com/XcXerxes/go-blog-server/models"
 	"github.com/XcXerxes/go-blog-server/pkg/e"
 	"github.com/XcXerxes/go-blog-server/pkg/util"
-	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 )
 
-type AuthBody struct {
+type AuthForm struct {
 	Username string `valid:"Required; MaxSize(50)"`
 	Password string `valid:"Required; MaxSize(50)"`
 }
@@ -27,38 +28,37 @@ type AuthBody struct {
 // @Description 登录
 // @Accept json
 // @produce json
-// @param username body AuthBody true "登录参数"
+// @param username, password string body AuthForm true "登录参数"
 // @Success 200
+// @Failure 500
 // @Router /signin [post]
 func PostAuth(c *gin.Context) {
-	code := e.INVALID_PARAMS
-	var auth AuthBody
-	if err := c.ShouldBind(&auth); err != nil {
-		models.SendResponse(c, code, nil, nil)
+	var (
+		appG = app.Gin{c}
+		form AuthForm
+	)
+	httpCode, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(httpCode, errCode, nil)
 		return
 	}
-	username := auth.Username
-	password := auth.Password
-
-	valid := validation.Validation{}
-	ok, _ := valid.Valid(&auth)
-	data := make(map[string]interface{})
-	if ok {
-		if models.CheckAuth(username, password) {
-			if token, err := util.GenerateToken(username, password); err != nil {
-				code = e.ERROR_AUTH_TOKEN
-			} else {
-				data["token"] = token
-				code = e.SUCCESS
-			}
-		} else {
-			code = e.ERROR_AUTH
-		}
-	} else {
-		for _, err := range valid.Errors {
-			log.Printf("err.key:%s, err.message: %s", err.Key, err.Message)
-		}
+	username := form.Username
+	password := form.Password
+	ok, err := models.CheckAuth(username, password)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, nil)
+		return
 	}
-
-	models.SendResponse(c, code, nil, data)
+	if !ok {
+		appG.Response(http.StatusOK, e.ERROR_AUTH, nil)
+		return
+	}
+	token, err := util.GenerateToken(username, password)
+	if err != nil {
+		appG.Response(http.StatusNonAuthoritativeInfo, e.ERROR_AUTH_TOKEN, nil)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"token": token,
+	})
 }

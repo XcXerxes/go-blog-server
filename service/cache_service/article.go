@@ -11,6 +11,7 @@ type Article struct {
 	ID    int
 	TagID int
 	State int
+	Title string
 
 	PageNum  int
 	PageSize int
@@ -34,6 +35,9 @@ func (a *Article) GetArticlesKey() string {
 	}
 	if a.State > 0 {
 		keys = append(keys, strconv.Itoa(a.State))
+	}
+	if a.Title != "" {
+		keys = append(keys, a.Title)
 	}
 	if a.PageNum > 0 {
 		keys = append(keys, strconv.Itoa(a.PageNum))

@@ -28,11 +28,14 @@ type Auth struct {
 // }
 
 // CheckAuth 验证登录信息
-func CheckAuth(username, password string) bool {
+func CheckAuth(username, password string) (bool, error) {
 	var auth Auth
-	db.Select("id").Where(Auth{Username: username, Password: password}).First(&auth)
-	if auth.ID > 0 {
-		return true
+	err := db.Select("id").Where(Auth{Username: username, Password: password}).First(&auth).Error
+	if err != nil {
+		return false, err
 	}
-	return false
+	if auth.ID > 0 {
+		return true, nil
+	}
+	return false, nil
 }

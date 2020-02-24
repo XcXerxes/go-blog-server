@@ -1,56 +1,89 @@
 basePath: /api/v1
 definitions:
-  admin.AuthBody:
+  admin.AuthForm:
     properties:
       password:
         type: string
       username:
         type: string
     type: object
-  models.Tag:
-    properties:
-      created_by:
-        description: 创建人
-        type: string
-      createdOn:
-        description: 创建时间
-        type: integer
-      id:
-        description: id标识
-        type: integer
-      modified_by:
-        description: 修改人
-        type: string
-      modifiedOn:
-        description: 修改时间
-        type: integer
-      name:
-        description: 标签名称
-        type: string
-      state:
-        description: 启用或禁用
-        type: integer
-    type: object
-  v1.ArticleBody:
+  v1.AddArticleForm:
     properties:
       content:
         description: 内容
+        type: string
+      cover_image_url:
+        description: 封面图片
         type: string
       created_by:
         description: 创建人
         type: string
       desc:
-        description: 描述信息
+        description: 描述
         type: string
       state:
-        description: 禁用或启用
+        description: 启用or 禁用
         type: integer
       tag_id:
-        description: 标签id
-        type: string
+        description: 分类id
+        type: integer
       title:
         description: 标题
         type: string
+    type: object
+  v1.AddTagForm:
+    properties:
+      created_by:
+        description: 创建人
+        type: string
+      name:
+        description: 名称
+        type: string
+      state:
+        description: 禁用 or 启用
+        type: integer
+    type: object
+  v1.EditArticleForm:
+    properties:
+      content:
+        description: 内容
+        type: string
+      cover_image_url:
+        description: 封面图片
+        type: string
+      desc:
+        description: 描述
+        type: string
+      id:
+        description: id
+        type: integer
+      modified_by:
+        description: 修改人
+        type: string
+      state:
+        description: 启用or 禁用
+        type: integer
+      tag_id:
+        description: 分类id
+        type: integer
+      title:
+        description: 标题
+        type: string
+    type: object
+  v1.EditTagForm:
+    properties:
+      id:
+        description: id
+        type: integer
+      modified_by:
+        description: 修改人
+        type: string
+      name:
+        description: 名称
+        type: string
+      state:
+        description: 禁用 or 启用
+        type: integer
     type: object
 info:
   contact: {}
@@ -89,7 +122,7 @@ paths:
         name: state
         required: true
         schema:
-          $ref: '#/definitions/v1.ArticleBody'
+          $ref: '#/definitions/v1.AddArticleForm'
       produces:
       - application/json
       responses:
@@ -141,7 +174,7 @@ paths:
         name: state
         required: true
         schema:
-          $ref: '#/definitions/v1.ArticleBody'
+          $ref: '#/definitions/v1.EditArticleForm'
       produces:
       - application/json
       responses:
@@ -155,14 +188,15 @@ paths:
       parameters:
       - description: 登录参数
         in: body
-        name: username
+        name: string
         required: true
         schema:
-          $ref: '#/definitions/admin.AuthBody'
+          $ref: '#/definitions/admin.AuthForm'
       produces:
       - application/json
       responses:
         "200": {}
+        "500": {}
       summary: 登录
   /tags:
     get:
@@ -179,6 +213,10 @@ paths:
         in: query
         name: name
         type: string
+      - description: 标签名称
+        in: query
+        name: state
+        type: integer
       produces:
       - application/json
       responses:
@@ -191,13 +229,51 @@ paths:
       parameters:
       - description: 新增文章标签
         in: body
-        name: created_by
+        name: state
         required: true
         schema:
-          $ref: '#/definitions/models.Tag'
+          $ref: '#/definitions/v1.AddTagForm'
       produces:
       - application/json
       responses:
         "200": {}
+        "500": {}
       summary: 新增文章标签
+  /tags/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除文章标签
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 删除文章标签
+    put:
+      consumes:
+      - application/json
+      description: 修改文章标签
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 新增文章标签
+        in: body
+        name: state
+        required: true
+        schema:
+          $ref: '#/definitions/v1.EditTagForm'
+      produces:
+      - application/json
+      responses:
+        "200": {}
+      summary: 修改文章标签
 swagger: "2.0"

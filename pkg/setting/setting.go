@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-19 19:18:41
+ * @LastEditTime: 2020-02-24 20:15:16
  */
 package setting
 
@@ -52,6 +52,16 @@ type Database struct {
 
 var DatabaseSetting = &Database{}
 
+type Redis struct {
+	Host        string
+	Password    string
+	MaxIdle     int
+	MaxActive   int
+	IdleTimeout time.Duration
+}
+
+var RedisSetting = &Redis{}
+
 func Setup() {
 	// 初始化加载 conf/app.ini 文件
 	Cfg, err := ini.Load("conf/app.ini")
@@ -61,6 +71,7 @@ func Setup() {
 	LoadDataBase(Cfg)
 	LoadServer(Cfg)
 	LoadApp(Cfg)
+	LoadRedis(Cfg)
 }
 
 // LoadApp 加载基础
@@ -85,6 +96,13 @@ func LoadServer(cfg *ini.File) {
 // LoadDataBase 加载数据库配置
 func LoadDataBase(cfg *ini.File) {
 	if err := cfg.Section("database").MapTo(DatabaseSetting); err != nil {
+		log.Fatalf("Cfg.MapTo DatabaseSetting err: %v", err)
+	}
+}
+
+// LoadRedis 加载redis
+func LoadRedis(cfg *ini.File) {
+	if err := cfg.Section("redis").MapTo(RedisSetting); err != nil {
 		log.Fatalf("Cfg.MapTo DatabaseSetting err: %v", err)
 	}
 }

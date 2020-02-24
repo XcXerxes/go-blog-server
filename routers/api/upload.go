@@ -9,41 +9,45 @@
 package api
 
 import (
-	"github.com/XcXerxes/go-blog-server/models"
+	"github.com/XcXerxes/go-blog-server/pkg/app"
 	"github.com/XcXerxes/go-blog-server/pkg/e"
 	"github.com/XcXerxes/go-blog-server/pkg/upload"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func UploadImage(c *gin.Context) {
-	data := make(map[string]string)
-	code := e.SUCCESS
+	appG := app.Gin{c}
 	file, image, err := c.Request.FormFile("image")
 	if err != nil {
-		code = e.ERROR
-		models.SendResponse(c, code, nil, data)
+		appG.Response(http.StatusInternalServerError, e.ERROR, nil)
+		return
 	}
 	if image == nil {
-		code = e.INVALID_PARAMS
-	} else {
-		imageName := upload.GetImageName(image.Filename)
-		fullPath := upload.GetImageFullPath()
-		savePath := upload.GetImagePath()
-
-		src := fullPath + imageName
-		if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
-			code = e.ERROR_UPLOAD_CHECK_IMAGE_FORMAT
-		} else {
-			err := upload.CheckImage(fullPath)
-			if err != nil {
-				code = e.ERROR_UPLOAD_CHECK_IMAGE_FAIL
-			} else if err := c.SaveUploadedFile(image, src); err != nil {
-				code = e.ERROR_UPLOAD_SAVE_IMAGE_FAIL
-			} else {
-				data["image_url"] = upload.GetImageFullUrl(imageName)
-				data["image_save_url"] = savePath + imageName
-			}
-		}
-		models.SendResponse(c, code, nil, data)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		return
 	}
+	imageName := upload.GetImageName(image.Filename)
+	fullPath := upload.GetImageFullPath()
+	savePath := upload.GetImagePath()
+
+	src := fullPath + imageName
+	if !upload.CheckImageExt(imageName) || !upload.CheckImageSize(file) {
+		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_CHECK_IMAGE_FORMAT, nil)
+		return
+	}
+	err = upload.CheckImage(fullPath)
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_CHECK_IMAGE_FAIL, nil)
+		return
+	}
+	err = c.SaveUploadedFile(image, src)
+	if err != nil  {
+		appG.Response(http.StatusInternalServerError, e.ERROR_UPLOAD_SAVE_IMAGE_FAIL, nil)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"image_url": upload.GetImageFullUrl(imageName),
+		"image_save_url": savePath + imageName,
+	})
 }
