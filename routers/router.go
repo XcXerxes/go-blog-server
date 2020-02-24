@@ -9,7 +9,10 @@
 package routers
 
 import (
+	"net/http"
+
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
+	"github.com/XcXerxes/go-blog-server/pkg/upload"
 	"github.com/XcXerxes/go-blog-server/routers/api"
 	admin "github.com/XcXerxes/go-blog-server/routers/api/admin"
 	v1 "github.com/XcXerxes/go-blog-server/routers/api/v1"
@@ -37,9 +40,8 @@ func InitRouter() *gin.Engine {
 	// r.Use(gin.Logger())
 	//
 	r.Use(gin.Recovery())
-
+	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	gin.SetMode(setting.ServerSetting.RunMode)
-
 	r.POST("/api/v1/signin", admin.PostAuth)
 	r.POST("/api/v1/upload", api.UploadImage)
 	// 注册路由

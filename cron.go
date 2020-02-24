@@ -7,7 +7,7 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-func main() {
+func init() {
 	log.Println("starting...")
 
 	c := cron.New()
