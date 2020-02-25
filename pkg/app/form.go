@@ -1,10 +1,18 @@
+/*
+ * @Description:
+ * @Author: leo
+ * @Date: 2020-02-24 18:59:59
+ * @LastEditors: leo
+ * @LastEditTime: 2020-02-25 20:35:00
+ */
 package app
 
 import (
+	"net/http"
+
 	"github.com/XcXerxes/go-blog-server/pkg/e"
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // BindAndValid 绑定并且验证数据

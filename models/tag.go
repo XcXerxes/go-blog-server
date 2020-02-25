@@ -8,8 +8,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -20,19 +18,6 @@ type Tag struct {
 	CreatedBy  string `json:"created_by"`  // 创建人
 	ModifiedBy string `json:"modified_by"` // 修改人
 	State      int    `json:"state"`       // 启用或禁用
-}
-
-// BeforeCreate  gorm callback
-func (tag *Tag) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-	return nil
-}
-
-// BeforeUpdate gorm callback
-func (tag *Tag) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-	return nil
 }
 
 // GetTags 获取所有标签列表

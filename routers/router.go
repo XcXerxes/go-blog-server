@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-23 20:44:04
+ * @LastEditTime: 2020-02-25 20:58:23
  */
 
 package routers
@@ -16,6 +16,7 @@ import (
 	"github.com/XcXerxes/go-blog-server/routers/api"
 	admin "github.com/XcXerxes/go-blog-server/routers/api/admin"
 	v1 "github.com/XcXerxes/go-blog-server/routers/api/v1"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,18 +37,23 @@ import (
 func InitRouter() *gin.Engine {
 	// 返回 Gin 的 type Engine struct {} 里面包含RouterGroup，相当于创建一个路由Handlers，可以后期绑定各类的路由规则和函数、中间件等
 	r := gin.Default()
-	// 日志的中间件
-	// r.Use(gin.Logger())
-	//
-	r.Use(gin.Recovery())
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Authorization", "content-type"},
+		AllowCredentials: true,
+	}))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	gin.SetMode(setting.ServerSetting.RunMode)
 	r.POST("/api/v1/signin", admin.PostAuth)
 	r.POST("/api/v1/upload", api.UploadImage)
 	// 注册路由
 	apiv1 := r.Group("/api/v1")
-	// apiv1.Use(jwt.JWT())
+	//apiv1.Use(jwt.JWT())
 	{
+		// 用户路由
+		apiv1.GET("/user", v1.GetUserInfo)
 		// 标签路由
 		apiv1.GET("/tags", v1.GetTags)
 		apiv1.POST("/tags", v1.AddTag)

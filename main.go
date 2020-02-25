@@ -3,27 +3,29 @@
  * @Author: leo
  * @Date: 2020-02-19 15:08:40
  * @LastEditors: leo
- * @LastEditTime: 2020-02-23 13:48:08
+ * @LastEditTime: 2020-02-25 13:04:30
  */
 package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
-	"os/exec"
-
 	_ "github.com/XcXerxes/go-blog-server/docs"
 	"github.com/XcXerxes/go-blog-server/models"
+	"github.com/XcXerxes/go-blog-server/pkg/gredis"
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
+	"github.com/XcXerxes/go-blog-server/pkg/util"
 	"github.com/XcXerxes/go-blog-server/routers"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"log"
+	"net/http"
 )
 
 func init() {
 	setting.Setup()
 	models.Setup()
+	util.Setup()
+	gredis.Setup()
 	// logging.Setup()
 }
 
@@ -49,6 +51,6 @@ func main() {
 		WriteTimeout:   writeTimeout,   // 允许写入的最大时间
 		MaxHeaderBytes: maxHeaderBytes, // 请求投的最大字节数
 	}
-	exec.Command(`open`, `http://localhost:8000/swagger/index.html`).Start()
+	//exec.Command(`open`, `http://localhost:8000/swagger/index.html`).Start()
 	log.Fatal(s.ListenAndServe())
 }

@@ -64,6 +64,7 @@ func (t *Tag) GetAll() ([]*models.Tag, error) {
 		State:    t.State,
 		PageNum:  t.PageNum,
 		PageSize: t.PageSize,
+		Name: t.Name,
 	}
 	key := cache.GetTagsKey()
 	if gredis.Exists(key) {

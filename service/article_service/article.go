@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-24 15:04:30
  * @LastEditors: leo
- * @LastEditTime: 2020-02-24 15:13:51
+ * @LastEditTime: 2020-02-25 13:00:07
  */
 
 package article_service
@@ -110,6 +110,7 @@ func (a *Article) GetAll() ([]*models.Article, error) {
 			fmt.Errorf("%v", err)
 		} else {
 			json.Unmarshal(data, &cacheArticles)
+			return cacheArticles, nil
 		}
 	}
 	articles, err := models.GetArticles(a.PageNum, a.PageSize, a.getMaps())
@@ -138,7 +139,7 @@ func (a *Article) Count() (int, error) {
 // getMaps 查询条件
 func (a *Article) getMaps() map[string]interface{} {
 	maps := make(map[string]interface{})
-	maps["delete_on"] = 0
+	// maps["delete_on"] = 0
 	if a.State != -1 {
 		maps["state"] = a.State
 	}

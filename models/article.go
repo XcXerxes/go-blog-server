@@ -3,13 +3,11 @@
  * @Author: leo
  * @Date: 2020-02-20 19:20:31
  * @LastEditors: leo
- * @LastEditTime: 2020-02-20 20:12:00
+ * @LastEditTime: 2020-02-25 20:53:43
  */
 package models
 
 import (
-	"time"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -25,19 +23,6 @@ type Article struct {
 	ModifiedBy    string `json:"modified_by"`     // 修改人
 	State         int    `json:"state"`           // 禁用 or 启用
 	CoverImageUrl string `json:"cover_image_url"` // 封面图片
-}
-
-// BeforeCreate  gorm callback
-func (article *Article) BeforeCreate(scope *gorm.Scope) error {
-	scope.SetColumn("CreatedOn", time.Now().Unix())
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-	return nil
-}
-
-// BeforeUpdate gorm callback
-func (article *Article) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("ModifiedOn", time.Now().Unix())
-	return nil
 }
 
 func ExistArticleById(id int) (bool, error) {

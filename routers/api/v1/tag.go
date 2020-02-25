@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:35:07
  * @LastEditors: leo
- * @LastEditTime: 2020-02-24 20:33:07
+ * @LastEditTime: 2020-02-25 20:37:19
  */
 
 package v1
@@ -35,12 +35,12 @@ import (
 func GetTags(c *gin.Context) {
 	appG := app.Gin{c}
 	valid := validation.Validation{}
-	name := c.Query("name")
+	name := com.StrTo(c.Query("name")).String()
 	state := -1
 	if arg := c.Query("state"); arg != "" {
 		// 如果传过来的是 string 转为 int
 		state = com.StrTo(arg).MustInt()
-		valid.Range(state, 0, 1, "state")
+		valid.Range(state, -1, 1, "state")
 	}
 	if valid.HasErrors() {
 		app.MarkErrors(valid.Errors)
@@ -72,7 +72,7 @@ func GetTags(c *gin.Context) {
 
 type AddTagForm struct {
 	Name      string `json:"name" valid:"Required;MaxSize(100)"`       // 名称
-	State     int    `json:"state" valid:"Requred;Range(0, 1)"`        // 禁用 or 启用
+	State     int    `json:"state" valid:"Required;Range(0, 1)"`       // 禁用 or 启用
 	CreatedBy string `json:"created_by" valid:"Required;MaxSize(100)"` // 创建人
 }
 
@@ -105,7 +105,7 @@ func AddTag(c *gin.Context) {
 		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG, nil)
 		return
 	}
-	if !exists {
+	if exists {
 		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG, nil)
 		return
 	}

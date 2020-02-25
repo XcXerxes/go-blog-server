@@ -6,6 +6,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/astaxie/beego v1.12.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-gonic/gin v1.5.0
 	github.com/go-ini/ini v1.52.0
 	github.com/go-openapi/spec v0.19.6 // indirect
@@ -26,7 +27,7 @@ require (
 	github.com/swaggo/swag v1.6.5
 	github.com/unknwon/com v1.0.1
 	golang.org/x/net v0.0.0-20200222033325-078779b8f2d8 // indirect
-	golang.org/x/sys v0.0.0-20200219091948-cb0a6d8edb6c // indirect
+	golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae // indirect
 	golang.org/x/tools v0.0.0-20200221224223-e1da425f72fd // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
