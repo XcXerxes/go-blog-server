@@ -45,10 +45,11 @@ func PostAuth(c *gin.Context) {
 	username := form.Username
 	password := form.Password
 	ok, err := models.CheckAuth(username, password)
-	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, nil)
-		return
-	}
+	// if err != nil {
+	// 	log.Fatal(err)
+	// 	appG.Response(http.StatusInternalServerError, e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT, nil)
+	// 	return
+	// }
 	if !ok {
 		appG.Response(http.StatusOK, e.ERROR_AUTH, nil)
 		return
