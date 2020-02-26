@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:35:07
  * @LastEditors: leo
- * @LastEditTime: 2020-02-25 20:37:19
+ * @LastEditTime: 2020-02-26 14:54:47
  */
 
 package v1
@@ -72,7 +72,7 @@ func GetTags(c *gin.Context) {
 
 type AddTagForm struct {
 	Name      string `json:"name" valid:"Required;MaxSize(100)"`       // 名称
-	State     int    `json:"state" valid:"Required;Range(0, 1)"`       // 禁用 or 启用
+	State     int    `json:"state" valid:"Range(0, 1)"`                // 禁用 or 启用
 	CreatedBy string `json:"created_by" valid:"Required;MaxSize(100)"` // 创建人
 }
 
@@ -88,7 +88,7 @@ type AddTagForm struct {
 func AddTag(c *gin.Context) {
 	var (
 		appG = app.Gin{c}
-		form AddTagForm
+		form = AddTagForm{CreatedBy: c.GetString("username")}
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
@@ -109,6 +109,15 @@ func AddTag(c *gin.Context) {
 		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG, nil)
 		return
 	}
+	existsName, err := tagService.ExistByName()
+	if err != nil {
+		appG.Response(http.StatusInternalServerError, e.ERROR_EXIST_TAG, nil)
+		return
+	}
+	if existsName {
+		appG.Response(http.StatusOK, e.ERROR_EXIST_TAG, nil)
+		return
+	}
 	err = tagService.Add()
 	if err != nil {
 		appG.Response(http.StatusInternalServerError, e.ERROR_ADD_TAG_FAIL, nil)
@@ -120,7 +129,7 @@ func AddTag(c *gin.Context) {
 type EditTagForm struct {
 	ID         int    `json:"id" valid:"Required;Min(1)"`                // id
 	Name       string `json:"name" valid:"Required;MaxSize(100)"`        // 名称
-	State      int    `json:"state" valid:"Requred;Range(0, 1)"`         // 禁用 or 启用
+	State      int    `json:"state" valid:"Range(0, 1)"`                 // 禁用 or 启用
 	ModifiedBy string `json:"modified_by" valid:"Required;MaxSize(100)"` // 修改人
 }
 
@@ -136,7 +145,7 @@ type EditTagForm struct {
 func EditTag(c *gin.Context) {
 	var (
 		appG = app.Gin{c}
-		form = EditTagForm{ID: com.StrTo(c.Param("id")).MustInt()}
+		form = EditTagForm{ID: com.StrTo(c.Param("id")).MustInt(), ModifiedBy: c.GetString("username")}
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {

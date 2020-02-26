@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-21 12:38:02
  * @LastEditors: leo
- * @LastEditTime: 2020-02-25 13:03:10
+ * @LastEditTime: 2020-02-26 14:04:53
  */
 
 package util
@@ -25,7 +25,7 @@ type Claims struct {
 // GenerateToken 创建生成token
 func GenerateToken(username, password string) (string, error) {
 	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
+	expireTime := nowTime.Add(24 * time.Hour)
 
 	claims := Claims{
 		username,

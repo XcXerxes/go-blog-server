@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-24 15:04:30
  * @LastEditors: leo
- * @LastEditTime: 2020-02-25 13:00:07
+ * @LastEditTime: 2020-02-26 19:00:41
  */
 
 package article_service
@@ -13,6 +13,7 @@ import (
 	"fmt"
 
 	"github.com/XcXerxes/go-blog-server/models"
+	"github.com/XcXerxes/go-blog-server/pkg/e"
 	"github.com/XcXerxes/go-blog-server/pkg/gredis"
 	"github.com/XcXerxes/go-blog-server/service/cache_service"
 )
@@ -46,12 +47,13 @@ func (a *Article) Add() error {
 	if err := models.AddArticle(article); err != nil {
 		return err
 	}
+	gredis.LikeDeletes(e.CACHE_ARTICLE)
 	return nil
 }
 
 // Edit 修改文章
 func (a *Article) Edit() error {
-	return models.EditArticle(a.ID, map[string]interface{}{
+	if err := models.EditArticle(a.ID, map[string]interface{}{
 		"tag_id":          a.TagID,
 		"title":           a.Title,
 		"desc":            a.Desc,
@@ -59,7 +61,11 @@ func (a *Article) Edit() error {
 		"created_by":      a.CreatedBy,
 		"cover_image_url": a.CoverImageUrl,
 		"state":           a.State,
-	})
+	}); err != nil {
+		return err
+	}
+	gredis.LikeDeletes(e.CACHE_ARTICLE)
+	return nil
 }
 
 // Get 获取单个文章
@@ -123,7 +129,11 @@ func (a *Article) GetAll() ([]*models.Article, error) {
 
 // Delete 删除文章
 func (a *Article) Delete() error {
-	return models.DeleteArticle(a.ID)
+	if err := models.DeleteArticle(a.ID); err != nil {
+		return err
+	}
+	gredis.LikeDeletes(e.CACHE_ARTICLE)
+	return nil
 }
 
 // ExistByID

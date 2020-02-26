@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-25 20:58:23
+ * @LastEditTime: 2020-02-26 18:21:05
  */
 
 package routers
@@ -11,6 +11,7 @@ package routers
 import (
 	"net/http"
 
+	"github.com/XcXerxes/go-blog-server/middleware/jwt"
 	"github.com/XcXerxes/go-blog-server/pkg/setting"
 	"github.com/XcXerxes/go-blog-server/pkg/upload"
 	"github.com/XcXerxes/go-blog-server/routers/api"
@@ -39,9 +40,9 @@ func InitRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8989"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin", "Authorization", "content-type"},
+		AllowHeaders:     []string{"Origin", "Authorization", "content-type", "x-requested-with"},
 		AllowCredentials: true,
 	}))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
@@ -50,7 +51,7 @@ func InitRouter() *gin.Engine {
 	r.POST("/api/v1/upload", api.UploadImage)
 	// 注册路由
 	apiv1 := r.Group("/api/v1")
-	//apiv1.Use(jwt.JWT())
+	apiv1.Use(jwt.JWT())
 	{
 		// 用户路由
 		apiv1.GET("/user", v1.GetUserInfo)

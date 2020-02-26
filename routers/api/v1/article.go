@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-20 18:53:54
  * @LastEditors: leo
- * @LastEditTime: 2020-02-24 20:23:17
+ * @LastEditTime: 2020-02-26 19:06:04
  */
 package v1
 
@@ -41,7 +41,7 @@ type ArticleBody struct {
 // @Router /articles/{id} [get]
 func GetArticle(c *gin.Context) {
 	appG := app.Gin{c}
-	id := com.StrTo(c.Query("id")).MustInt()
+	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
 
@@ -150,7 +150,7 @@ type AddArticleForm struct {
 func AddArticle(c *gin.Context) {
 	var (
 		appG = app.Gin{c}
-		form AddArticleForm
+		form = AddArticleForm{CreatedBy: c.GetString("username")}
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
@@ -210,7 +210,7 @@ func EditArticle(c *gin.Context) {
 	var (
 		appG = app.Gin{c}
 		// 定义 form 同时将 得到的 id 参数传给 form
-		form = EditArticleForm{ID: com.StrTo(c.Param("id")).MustInt()}
+		form = EditArticleForm{ID: com.StrTo(c.Param("id")).MustInt(), ModifiedBy: c.GetString("username")}
 	)
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {

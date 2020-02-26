@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 17:04:46
  * @LastEditors: leo
- * @LastEditTime: 2020-02-25 20:55:24
+ * @LastEditTime: 2020-02-26 13:06:20
  */
 
 package models
@@ -75,8 +75,7 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 			}
 		}
 		// 获取所有的字段
-		fields := scope.Fields()
-		fmt.Printf("fileds==========", fields)
+		// fields := scope.Fields()
 		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
 			if modifyTimeField.IsBlank {
 				modifyTimeField.Set(nowTime)
