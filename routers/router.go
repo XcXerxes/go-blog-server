@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-26 18:21:05
+ * @LastEditTime: 2020-02-27 11:59:31
  */
 
 package routers
@@ -16,6 +16,7 @@ import (
 	"github.com/XcXerxes/go-blog-server/pkg/upload"
 	"github.com/XcXerxes/go-blog-server/routers/api"
 	"github.com/XcXerxes/go-blog-server/routers/api/v1/admin"
+	"github.com/XcXerxes/go-blog-server/routers/api/v1/web"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -77,6 +78,8 @@ func InitRouter() *gin.Engine {
 	webApiv1 := r.Group("/api/v1/web")
 	{
 		webApiv1.GET("/tags", admin.GetTags)
+		webApiv1.GET("/articles", web.GetArticles)
+		webApiv1.GET("/articles/:id", admin.GetArticle)
 	}
 	// 创建不同的HTTP方法绑定到Handlers中，也支持POST、PUT、DELETE、PATCH、OPTIONS、HEAD 等常用的Restful方法
 	// gin.Context Context是gin中的上下文，它允许我们在中间件之间传递变量、管理流、验证JSON请求、响应JSON请求等，

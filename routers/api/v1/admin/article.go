@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-20 18:53:54
  * @LastEditors: leo
- * @LastEditTime: 2020-02-26 19:06:04
+ * @LastEditTime: 2020-02-27 11:19:42
  */
 package admin
 
@@ -90,7 +90,7 @@ func GetArticles(c *gin.Context) {
 	if arg := c.Query("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()
 		//maps["state"] = state
-		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
+		valid.Range(state, -1, 1, "state").Message("状态只允许0或1")
 	}
 	tagId := -1
 	if arg := c.Query("tag_id"); arg != "" {
