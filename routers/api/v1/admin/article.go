@@ -5,7 +5,7 @@
  * @LastEditors: leo
  * @LastEditTime: 2020-02-26 19:06:04
  */
-package v1
+package admin
 
 import (
 	"net/http"

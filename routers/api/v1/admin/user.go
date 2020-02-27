@@ -1,4 +1,4 @@
-package v1
+package admin
 
 import (
 	"github.com/XcXerxes/go-blog-server/pkg/app"
@@ -15,7 +15,7 @@ import (
 // @produce json
 // @Success 200
 // @Router /user [get]
-func GetUserInfo(c *gin.Context)  {
+func GetUserInfo(c *gin.Context) {
 	appG := app.Gin{c}
 	username, errCode := app.GetUserByToken(c)
 	if errCode != e.SUCCESS {
@@ -23,7 +23,7 @@ func GetUserInfo(c *gin.Context)  {
 		return
 	}
 	// 获取用户的服务
-	userService := user_service.User{Username:username}
+	userService := user_service.User{Username: username}
 	exists, err := userService.ExistByUsername()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_NOT_EXIST_USER, nil)
