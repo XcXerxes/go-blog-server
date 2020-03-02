@@ -3,7 +3,7 @@
  * @Author: leo
  * @Date: 2020-02-19 19:17:03
  * @LastEditors: leo
- * @LastEditTime: 2020-02-27 11:59:31
+ * @LastEditTime: 2020-03-02 20:56:56
  */
 
 package routers
@@ -47,7 +47,7 @@ func InitRouter() *gin.Engine {
 	}))
 	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
 	gin.SetMode(setting.ServerSetting.RunMode)
-	r.POST("/api/v1/admin/signin", admin.PostAuth)
+	r.POST("/api/v1/admin/signin", admin.Signin)
 	r.POST("/api/v1/admin/upload", api.UploadImage)
 	// 注册后台路由
 	adminApiv1 := r.Group("/api/v1/admin")
